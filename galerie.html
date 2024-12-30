@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galerie de Photos</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container my-4">
+    <h1 class="text-center mb-4">Galerie de Photos</h1>
+    <div id="photo-gallery" class="row g-4">
+      <!-- Les photos seront ajoutées ici dynamiquement -->
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- JavaScript pour charger et afficher les photos -->
+  <script>
+    async function loadGallery() {
+      try {
+        const response = await fetch('gallery.json'); // Charger le fichier JSON
+        const data = await response.json();
+
+        const gallery = document.getElementById("photo-gallery");
+
+        // Afficher les dossiers et les images
+        data.forEach(category => {
+          const folderName = document.createElement("h3");
+          folderName.className = "col-12 text-primary";
+          folderName.textContent = category.folder;
+          gallery.appendChild(folderName);
+
+          category.images.forEach(image => {
+            const col = document.createElement("div");
+            col.className = "col-sm-6 col-md-4 col-lg-3";
+
+            const card = document.createElement("div");
+            card.className = "card shadow-sm";
+
+            const img = document.createElement("img");
+            img.src = `images/${image}`;
+            img.alt = `Image de ${category.folder}`;
+            img.className = "card-img-top";
+
+            card.appendChild(img);
+            col.appendChild(card);
+            gallery.appendChild(col);
+          });
+        });
+      } catch (error) {
+        console.error("Erreur lors du chargement de la galerie :", error);
+      }
+    }
+
+    // Charger la galerie à l'ouverture de la page
+    loadGallery();
+  </script>
+</body>
+</html>
